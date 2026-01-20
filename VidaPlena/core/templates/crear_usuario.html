@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear usuario - Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'panel-global.css' %}">
+    <link rel="stylesheet" href="{% static 'crear_usuario.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body class="cuerpo-panel">
+
+    <header class="nav-contenedor">
+        <div class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
+        </div>
+        <div class="usuario-contenedor">
+            <div class="info-usuario">
+                <span class="nombre-usuario">{{ request.session.usuario_completo }}</span>
+                <p>Administrador</p> 
+            </div>
+            <div class="avatar-usuario">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <a href="{% url 'logout' %}" class="btn-salir" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="contenedor-panel">
+        <div class="formulario-card">
+            <div class="form-header">
+                <i class="fa-solid fa-user-plus"></i>
+                <h1>Registrar nuevo personal</h1>
+                <p>Complete los datos para dar de alta a un administrador, administrativo o médico.</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9rem; font-weight: 600; border: 1px solid; 
+                        {% if message.tags == 'success' %}
+                            background-color: #dcfce7; color: #166534; border-color: #bbf7d0;
+                        {% else %}
+                            background-color: #fee2e2; color: #dc2626; border-color: #fecaca;
+                        {% endif %}">
+                        
+                        {% if message.tags == 'success' %}
+                            <i class="fa-solid fa-circle-check"></i>
+                        {% else %}
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        {% endif %}
+                        
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'crear_usuario' %}" method="POST" class="grid-form">
+                {% csrf_token %}
+                
+                <div class="form-grupo">
+                    <label>Rol del Usuario</label>
+                    <select name="rol" id="selector-rol" required onchange="toggleEspecialidad()">
+                        <option value="" disabled {% if not datos.rol %}selected{% endif %}>Seleccione un rol</option>
+                        {% for r in roles %}
+                            {% if r.nombre_rol.strip.lower != "paciente" %}
+                                <option value="{{ r.id }}" {% if datos.rol == r.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ r.nombre_rol|capfirst }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-grupo">
+                    <label>RUT</label>
+                    <input type="text" name="rut" placeholder="12.345.678-9" value="{{ datos.rut|default:'' }}" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" value="{{ datos.nombre|default:'' }}" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido" value="{{ datos.apellido|default:'' }}" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Género</label>
+                    <select name="genero" required>
+                        <option value="" disabled {% if not datos.genero %}selected{% endif %}>Seleccione género</option>
+                        {% for g in generos %}
+                            <option value="{{ g.id }}" {% if datos.genero == g.id|stringformat:"s" %}selected{% endif %}>
+                                {{ g.genero }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Teléfono de contacto</label>
+                    <input type="tel" name="telefono" placeholder="+56 9 1234 5678" value="{{ datos.telefono|default:'' }}" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Correo electrónico</label>
+                    <input type="email" name="correo" value="{{ datos.correo|default:'' }}" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" required>
+                </div>
+
+                <div class="form-grupo full-width" id="grupo-especialidad" style="display: none;">
+                    <label>Especialidad médica</label>
+                    <select name="especialidad" id="id_especialidad">
+                        <option value="" disabled {% if not datos.especialidad %}selected{% endif %}>Seleccione especialidad</option>
+                        {% for esp in especialidades %}
+                            <option value="{{ esp.id }}" {% if datos.especialidad == esp.id|stringformat:"s" %}selected{% endif %}>
+                                {{ esp.especialidad }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-acciones full-width">
+                    <a href="{% url 'administrador' %}" class="btn-secundario">Volver al Panel</a>
+                    <button type="submit" class="btn-primario">Registrar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function toggleEspecialidad() {
+            const selector = document.getElementById('selector-rol');
+            if (!selector.value) return;
+
+            const selectedText = selector.options[selector.selectedIndex].text.toLowerCase();
+            const campoEsp = document.getElementById('grupo-especialidad');
+            const selectEsp = document.getElementById('id_especialidad');
+
+            if (selectedText.includes('medico') || selectedText.includes('médico')) {
+                campoEsp.style.display = 'block';
+                selectEsp.required = true;
+            } else {
+                campoEsp.style.display = 'none';
+                selectEsp.required = false;
+                selectEsp.value = "";
+            }
+        }
+        
+        window.onload = toggleEspecialidad;
+    </script>
+</body>
+</html>

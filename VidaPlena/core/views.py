@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, Medico, Administrativo, Administrador, Genero, Rol
-
+from .models import Paciente, Medico, Administrativo, Administrador, Genero, Rol, Especialidad
+from django.contrib import messages
 def home(request):
     return render(request, 'home.html')
 
@@ -244,3 +244,86 @@ def editar_usuario(request):
             print(f"Error al editar: {e}")
 
     return redirect(f'/gestion-usuarios/?tipo={tipo}')
+
+# CREAR USUARIO - ADMINISTRADOR
+
+def crear_usuario(request):
+    especialidades = Especialidad.objects.all()
+    roles_db = Rol.objects.all()
+    generos_db = Genero.objects.all()
+    
+    if request.method == 'POST':
+        id_rol = request.POST.get('rol') 
+        rut = request.POST.get('rut', '').strip()
+        nombre = request.POST.get('nombre', '').strip()
+        apellido = request.POST.get('apellido', '').strip()
+        genero_id = request.POST.get('genero')
+        telefono = request.POST.get('telefono', '').strip()
+        correo = request.POST.get('correo', '').strip().lower()
+        password = request.POST.get('password')
+
+        try:
+            rut_existe = (
+                Administrador.objects.filter(rut_administrador=rut).exists() or
+                Administrativo.objects.filter(rut_administrativo=rut).exists() or
+                Medico.objects.filter(rut_medico=rut).exists()
+            )
+            if rut_existe:
+                raise Exception(f"El RUT {rut} ya se encuentra registrado.")
+
+            correo_existe = (
+                Administrador.objects.filter(correo_administrador=correo).exists() or
+                Administrativo.objects.filter(correo_administrativo=correo).exists() or
+                Medico.objects.filter(correo_medico=correo).exists()
+            )
+            if correo_existe:
+                raise Exception(f"El correo {correo} ya está en uso.")
+
+            rol_instancia = Rol.objects.get(id=id_rol)
+            genero_instancia = Genero.objects.get(id=genero_id)
+            nombre_rol_limpio = rol_instancia.nombre_rol.strip().lower()
+
+            if nombre_rol_limpio == 'administrador':
+                Administrador.objects.create(
+                    rut_administrador=rut, nombre_administrador=nombre,
+                    apellido_administrador=apellido, genero=genero_instancia,
+                    rol=rol_instancia, telefono_administrador=telefono,
+                    correo_administrador=correo, password_administrador=password
+                )
+            elif nombre_rol_limpio == 'administrativo':
+                Administrativo.objects.create(
+                    rut_administrativo=rut, nombre_administrativo=nombre,
+                    apellido_administrativo=apellido, genero=genero_instancia,
+                    rol=rol_instancia, telefono_administrativo=telefono,
+                    correo_administrativo=correo, password_administrativo=password
+                )
+            elif nombre_rol_limpio == 'medico':
+                id_esp = request.POST.get('especialidad')
+                esp_instancia = Especialidad.objects.get(id=id_esp)
+                Medico.objects.create(
+                    rut_medico=rut, nombre_medico=nombre,
+                    apellido_medico=apellido, genero=genero_instancia,
+                    rol=rol_instancia, especialidad=esp_instancia,
+                    telefono_medico=telefono, correo_medico=correo,
+                    password_medico=password
+                )
+
+            messages.success(request, f"Usuario {nombre} {apellido} creado correctamente.")
+            return render(request, 'crear_usuario.html', {
+                'especialidades': especialidades,
+                'roles': roles_db,
+                'generos': generos_db
+            })
+
+        except Exception as e:
+            messages.error(request, str(e))
+            return render(request, 'crear_usuario.html', {
+                'especialidades': especialidades,
+                'roles': roles_db,
+                'generos': generos_db,
+                'datos': request.POST 
+            })
+
+    return render(request, 'crear_usuario.html', {
+        'especialidades': especialidades, 'roles': roles_db, 'generos': generos_db
+    })
