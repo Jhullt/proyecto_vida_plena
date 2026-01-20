@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, login, registro_paciente, pacientes, medicos, administrador, administrativos, logout
+from .views import home, login, registro_paciente, pacientes, medicos, administrador, administrativos, logout, ver_usuarios, eliminar_usuario, editar_usuario
 
 urlpatterns = [
     path('', home, name='home'),
@@ -10,4 +10,7 @@ urlpatterns = [
     path('administrador/', administrador, name='administrador'),
     path('administrativos/', administrativos, name='administrativos'),
     path('logout/', logout, name='logout'),
+    path('gestion-usuarios/', ver_usuarios, name='ver_usuarios'),
+    path('eliminar-usuario/<str:tipo>/<str:rut>/', eliminar_usuario, name='eliminar_usuario'),
+    path('editar-usuario/', editar_usuario, name='editar_usuario'),
 ]

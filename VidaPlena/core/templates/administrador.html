@@ -44,7 +44,7 @@
 
         <div class="cuadricula-acciones">
             
-            <button class="tarjeta-accion">
+            <button class="tarjeta-accion" onclick="location.href='#'">
                 <div class="icono-contenedor">
                     <i class="fa-solid fa-user-doctor"></i>
                 </div>
@@ -52,7 +52,7 @@
                 <p>Reportes de desempeño médico.</p>
             </button>
 
-            <button class="tarjeta-accion">
+            <button class="tarjeta-accion" onclick="location.href='#'">
                 <div class="icono-contenedor">
                     <i class="fa-solid fa-chart-column"></i>
                 </div>
@@ -60,7 +60,7 @@
                 <p>Pacientes por especialidad.</p>
             </button>
 
-            <button class="tarjeta-accion">
+            <button class="tarjeta-accion" onclick="location.href='#'">
                 <div class="icono-contenedor">
                     <i class="fa-solid fa-cash-register"></i>
                 </div>
@@ -68,7 +68,7 @@
                 <p>Control de pagos y recaudación.</p>
             </button>
 
-            <button class="tarjeta-accion">
+            <button class="tarjeta-accion" onclick="location.href='#'">
                 <div class="icono-contenedor">
                     <i class="fa-solid fa-magnifying-glass-chart"></i>
                 </div>
@@ -76,7 +76,31 @@
                 <p>Horas y días de mayor flujo.</p>
             </button>
 
+            <button class="tarjeta-accion" onclick="location.href='{% url 'ver_usuarios' %}'">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <h3>Usuarios</h3>
+                <p>Todos los usuarios en el sistema</p>
+            </button>
+
+            <button class="tarjeta-accion" onclick="location.href='#'">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h3>Crear</h3>
+                <p>Registra un nuevo usuario</p>
+            </button>
+
+            <button class="tarjeta-accion" onclick="location.href='#'">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <h3>Historial</h3>
+                <p>Registro de auditoria</p>
+            </button>
         </div>
+        
     </main>
 
     <footer class="footer-simple">

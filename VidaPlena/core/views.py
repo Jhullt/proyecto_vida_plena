@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Paciente, Medico, Administrativo, Administrador, Genero, Rol
 
 def home(request):
@@ -153,3 +153,94 @@ def login(request):
 def logout(request):
     request.session.flush()
     return redirect('login')
+
+# USUARIOS - ADMINISTRADOR
+
+def ver_usuarios(request):
+    if not request.session.get('usuario_id') or request.session.get('rol_id') != 4:
+        request.session.flush()
+        return redirect('login')
+
+    tipo = request.GET.get('tipo', 'pacientes')
+    
+    usuarios = []
+
+    if tipo == 'pacientes':
+        usuarios = Paciente.objects.all()
+    
+    elif tipo == 'medicos':
+        usuarios = Medico.objects.select_related('especialidad').all()
+    
+    elif tipo == 'administrativos':
+        usuarios = Administrativo.objects.all()
+    
+    elif tipo == 'administradores':
+        usuarios = Administrador.objects.all()
+
+    datos = {
+        'usuarios': usuarios,
+        'tipo': tipo,
+    }
+    
+    return render(request, 'usuarios.html', datos)
+
+# BORRAR USUARIOS - ADMINISTRADOR
+
+def eliminar_usuario(request, tipo, rut):
+
+    if request.session.get('rol_id') != 4:
+        return redirect('login')
+
+    if tipo == 'pacientes':
+        usuario = get_object_or_404(Paciente, rut_paciente=rut)
+    elif tipo == 'medicos':
+        usuario = get_object_or_404(Medico, rut_medico=rut)
+    elif tipo == 'administrativos':
+        usuario = get_object_or_404(Administrativo, rut_administrativo=rut)
+    elif tipo == 'administradores':
+        usuario = get_object_or_404(Administrador, rut_administrador=rut)
+    
+    usuario.delete()
+
+    return redirect(f'/gestion-usuarios/?tipo={tipo}')
+
+# MODIFICAR USUARIO - ADMINISTRADOR
+
+def editar_usuario(request):
+    if request.method == 'POST':
+        tipo = request.POST.get('tipo_usuario')
+        rut_orig = request.POST.get('rut_original')
+        rut_nuevo = request.POST.get('nuevo_rut')
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        correo = request.POST.get('correo')
+        password = request.POST.get('nueva_password')
+
+        try:
+  
+            if tipo == 'pacientes':
+                u = Paciente.objects.get(rut_paciente=rut_orig)
+                u.rut_paciente = rut_nuevo
+                u.nombre_paciente, u.apellido_paciente, u.correo_paciente = nombre, apellido, correo
+                if password: u.contrasena_paciente = password
+            elif tipo == 'medicos':
+                u = Medico.objects.get(rut_medico=rut_orig)
+                u.rut_medico = rut_nuevo
+                u.nombre_medico, u.apellido_medico, u.correo_medico = nombre, apellido, correo
+                if password: u.contrasena_medico = password
+            elif tipo == 'administrativos':
+                u = Administrativo.objects.get(rut_administrativo=rut_orig)
+                u.rut_administrativo = rut_nuevo
+                u.nombre_administrativo, u.apellido_administrativo, u.correo_administrativo = nombre, apellido, correo
+                if password: u.contrasena_administrativo = password
+            elif tipo == 'administradores':
+                u = Administrador.objects.get(rut_administrador=rut_orig)
+                u.rut_administrador = rut_nuevo
+                u.nombre_administrador, u.apellido_administrador, u.correo_administrador = nombre, apellido, correo
+                if password: u.contrasena_administrador = password
+            
+            u.save()
+        except Exception as e:
+            print(f"Error al editar: {e}")
+
+    return redirect(f'/gestion-usuarios/?tipo={tipo}')

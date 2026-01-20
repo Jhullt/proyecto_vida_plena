@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'panel-global.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body class="cuerpo-panel">
+
+    <header class="nav-contenedor">
+        <div class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
+        </div>
+
+        <div class="usuario-contenedor">
+            <div class="info-usuario">
+                <span class="nombre-usuario">{{ request.session.usuario_completo }}</span>
+                <p>Administrador</p> 
+            </div>
+            <div class="avatar-usuario">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <a href="{% url 'logout' %}" class="btn-salir" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="contenedor-panel">
+        <section class="bienvenida">
+            <h1>Panel de gestión de usuarios</h1>
+            <p>Visualizando el listado de: <strong>{{ tipo|capfirst }}</strong></p>
+        </section>
+
+        <div class="layout-gestion">
+            <div class="seccion-tabla">
+                <table class="tabla-usuarios">
+                    <thead>
+                        <tr>
+                            <th>RUT</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo Electrónico</th>
+                            {% if tipo == 'medicos' %}
+                            <th>Especialidad</th>
+                            {% endif %}
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                        <tr>
+                            <td>
+                                {% if tipo == 'pacientes' %}{{ u.rut_paciente }}
+                                {% elif tipo == 'medicos' %}{{ u.rut_medico }}
+                                {% elif tipo == 'administrativos' %}{{ u.rut_administrativo }}
+                                {% else %}{{ u.rut_administrador }}{% endif %}
+                            </td>
+                            <td>
+                                {% if tipo == 'pacientes' %}{{ u.nombre_paciente }} {{ u.apellido_paciente }}
+                                {% elif tipo == 'medicos' %}{{ u.nombre_medico }} {{ u.apellido_medico }}
+                                {% elif tipo == 'administrativos' %}{{ u.nombre_administrativo }} {{ u.apellido_administrativo }}
+                                {% else %}{{ u.nombre_administrador }} {{ u.apellido_administrador }}{% endif %}
+                            </td>
+                            <td>
+                                {% if tipo == 'pacientes' %}{{ u.correo_paciente }}
+                                {% elif tipo == 'medicos' %}{{ u.correo_medico }}
+                                {% elif tipo == 'administrativos' %}{{ u.correo_administrativo }}
+                                {% else %}{{ u.correo_administrador }}{% endif %}
+                            </td>
+                            {% if tipo == 'medicos' %}
+                            <td><span class="tag-especialidad">{{ u.especialidad.especialidad }}</span></td>
+                            {% endif %}
+                            
+                            <td>
+                                <div class="contenedor-acciones">
+                                    <button class="btn-accion editar" title="Editar" 
+                                        onclick="abrirModal(
+                                            '{% if tipo == 'pacientes' %}{{ u.rut_paciente }}{% elif tipo == 'medicos' %}{{ u.rut_medico }}{% elif tipo == 'administrativos' %}{{ u.rut_administrativo }}{% else %}{{ u.rut_administrador }}{% endif %}',
+                                            '{% if tipo == 'pacientes' %}{{ u.nombre_paciente }}{% elif tipo == 'medicos' %}{{ u.nombre_medico }}{% elif tipo == 'administrativos' %}{{ u.nombre_administrativo }}{% else %}{{ u.nombre_administrador }}{% endif %}',
+                                            '{% if tipo == 'pacientes' %}{{ u.apellido_paciente }}{% elif tipo == 'medicos' %}{{ u.apellido_medico }}{% elif tipo == 'administrativos' %}{{ u.apellido_administrativo }}{% else %}{{ u.apellido_administrador }}{% endif %}',
+                                            '{% if tipo == 'pacientes' %}{{ u.correo_paciente }}{% elif tipo == 'medicos' %}{{ u.correo_medico }}{% elif tipo == 'administrativos' %}{{ u.correo_administrativo }}{% else %}{{ u.correo_administrador }}{% endif %}'
+                                        )">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+
+                                    {% if tipo == 'pacientes' %}
+                                        <a href="{% url 'eliminar_usuario' tipo u.rut_paciente %}" class="btn-accion eliminar" onclick="return confirm('¿Eliminar paciente?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    {% elif tipo == 'medicos' %}
+                                        <a href="{% url 'eliminar_usuario' tipo u.rut_medico %}" class="btn-accion eliminar" onclick="return confirm('¿Eliminar médico?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    {% elif tipo == 'administrativos' %}
+                                        <a href="{% url 'eliminar_usuario' tipo u.rut_administrativo %}" class="btn-accion eliminar" onclick="return confirm('¿Eliminar administrativo?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'eliminar_usuario' tipo u.rut_administrador %}" class="btn-accion eliminar" onclick="return confirm('¿Eliminar administrador?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="{% if tipo == 'medicos' %}5{% else %}4{% endif %}" class="tabla-vacia">
+                                No hay registros para esta categoría.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <aside class="menu-lateral">
+                <a href="?tipo=pacientes" class="btn-categoria {% if tipo == 'pacientes' %}activo{% endif %}">
+                    <i class="fa-solid fa-hospital-user"></i> Pacientes
+                </a>
+                <a href="?tipo=medicos" class="btn-categoria {% if tipo == 'medicos' %}activo{% endif %}">
+                    <i class="fa-solid fa-user-md"></i> Médicos
+                </a>
+                <a href="?tipo=administrativos" class="btn-categoria {% if tipo == 'administrativos' %}activo{% endif %}">
+                    <i class="fa-solid fa-clipboard-user"></i> Administrativos
+                </a>
+                <a href="?tipo=administradores" class="btn-categoria {% if tipo == 'administradores' %}activo{% endif %}">
+                    <i class="fa-solid fa-user-shield"></i> Administradores
+                </a>
+                
+                <hr class="separador">
+                
+                <a href="{% url 'administrador' %}" class="btn-volver">
+                    <i class="fa-solid fa-arrow-left"></i> Volver al Panel
+                </a>
+            </aside>
+        </div>
+    </main>
+
+<div id="modalEditar" class="modal">
+    <div class="modal-contenido">
+        <div class="modal-header">Editar usuario</div>
+        <form id="formEditar" method="POST" action="{% url 'editar_usuario' %}">
+            {% csrf_token %}
+            <input type="hidden" name="tipo_usuario" value="{{ tipo }}">
+            <input type="hidden" name="rut_original" id="edit_rut_original">
+            
+            <div class="grid-formulario">
+                <div class="form-grupo">
+                    <label>RUT</label>
+                    <input type="text" name="nuevo_rut" id="edit_rut_nuevo" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Correo electrónico</label>
+                    <input type="email" name="correo" id="edit_correo" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="edit_nombre" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido" id="edit_apellido" required>
+                </div>
+                <div class="form-grupo" style="grid-column: span 2;">
+                    <label>Nueva contraseña (Opcional)</label>
+                    <input type="password" name="nueva_password" id="edit_password" placeholder="********">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button type="submit" class="btn-guardar">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <footer class="footer-simple">
+        <p>&copy; 2026 Centro médico Vida Plena - Gestión Administrativa</p>
+    </footer>
+
+    <script>
+        function abrirModal(rut, nombre, apellido, correo) {
+
+            document.getElementById('edit_rut_original').value = rut;
+            document.getElementById('edit_rut_nuevo').value = rut;
+            document.getElementById('edit_nombre').value = nombre;
+            document.getElementById('edit_apellido').value = apellido;
+            document.getElementById('edit_correo').value = correo;
+            document.getElementById('edit_password').value = "";
+            document.getElementById('modalEditar').style.display = 'block';
+        }
+    
+        function cerrarModal() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+    
+        window.onclick = function(event) {
+            let modal = document.getElementById('modalEditar');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
