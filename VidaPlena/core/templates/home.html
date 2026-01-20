@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro médico Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body>
+
+    <header>
+        <div class="nav-contenedor">
+            <img src="{% static 'icons/logo.png' %}" alt="logo" class="logo">
+            <nav>
+                <a href="#">Inicio</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#">Contacto</a>
+            </nav>
+            <a href="{% url 'login' %}">
+                <button class="btn-login">Iniciar sesión</button>
+            </a>            
+        </div>
+    </header>
+
+    <main>
+        <section class="seccion-principal">
+            <div class="seccion-principal-contenedor">
+                <h1>Tu salud es nuestra prioridad</h1>
+                <p>Cuidamos de ti y de tu familia con los mejores especialistas del país.</p>
+                <a href="{% url 'login' %}" class="btn-main-login">Reserva tu cita</a>
+            </div>
+        </section>
+
+        <section id="servicios" class="servicios">
+            <h2>Nuestros Servicios</h2>
+            <div class="lista-servicios">
+                <div class="carta">
+                    <h3>Consulta general</h3>
+                    <p>Atención integral para el diagnóstico y tratamiento de enfermedades comunes.</p>
+                </div>
+                <div class="carta">
+                    <h3>Pediatría</h3>
+                    <p>Cuidado especializado para los más pequeños del hogar.</p>
+                </div>
+                <div class="carta">
+                    <h3>Laboratorio</h3>
+                    <p>Análisis clínicos rápidos con tecnología de última generación.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Centro médico Vida Plena - Cuidando tu vida.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+/* GLOBAL */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cuerpo-login {
+    background-color: #f4f4f4;
+    background-image: linear-gradient(135deg, #fe4973 0%, #a32d48 100%);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px
+}
+
+.contenedor-login {
+    width: 100%;
+    max-width: 420px;
+}
+
+.tarjeta-login {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* LOGO */
+.logo-seccion img {
+    width: 130px;
+}
+
+.tarjeta-login h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.tarjeta-login p {
+    color: #fe4973;
+    font-weight: 600;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* FORMULARIO */
+.grupo-entrada {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.grupo-entrada label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 600;
+}
+
+.grupo-entrada input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.grupo-entrada input:focus {
+    border-color: #fe4973;
+    background-color: #fff9fa;
+}
+
+/* BOTON INICIAR SESION */
+.boton-enviar {
+    width: 100%;
+    padding: 14px;
+    background-color: #fe4973;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(254, 73, 115, 0.3);
+}
+
+.boton-enviar:hover {
+    background-color: #d63c62;
+    transform: translateY(-1px);
+}
+
+/* REGISTRO */
+.seccion-registro {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.enlace-registro {
+    color: #fe4973;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.enlace-registro:hover {
+    text-decoration: underline;
+}
+
+/* ENLACES SECUNDARIOS */
+.enlaces-secundarios {
+    margin-top: 20px;
+}
+
+.enlaces-secundarios a {
+    color: #777;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+}
+
+.enlaces-secundarios a:hover {
+    color: #fe4973;
+}
+
+.enlaces-secundarios hr {
+    margin: 15px auto;
+    width: 50%;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.volver {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    color: #fe4973 !important;
+}

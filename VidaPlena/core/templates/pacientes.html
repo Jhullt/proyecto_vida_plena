@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel médico - Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'panel-global.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body class="cuerpo-panel">
+
+    <header class="nav-contenedor">
+
+        <div class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
+        </div>
+
+        <div class="usuario-contenedor">
+            <div class="info-usuario">
+                <span class="nombre-usuario">{{ request.session.usuario_completo }}</span>
+                <p>Paciente</p> </div>
+
+            <div class="avatar-usuario">
+                <i class="fa-solid fa-user-circle"></i> 
+            </div>
+
+            <a href="{% url 'logout' %}" class="btn-salir" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+
+        </div>
+
+    </header>
+
+    <main class="contenedor-panel">
+        <section class="bienvenida">
+            <h1>Bienvenido de nuevo</h1>
+            <p>¿Qué deseas gestionar el día de hoy?</p>
+        </section>
+
+        <div class="cuadricula-acciones">
+            
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <h3>Reserva de horas</h3>
+                <p>Agenda tu próxima cita médica online.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-file-medical"></i>
+                </div>
+                <h3>Resultados laboratorio</h3>
+                <p>Consulta tus exámenes realizados.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-notes-medical"></i>
+                </div>
+                <h3>Historial clínico</h3>
+                <p>Revisa tus atenciones anteriores.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <h3>Pagos y boletas</h3>
+                <p>Paga en línea y descarga tus documentos.</p>
+            </button>
+
+        </div>
+    </main>
+    
+    <footer class="footer-simple">
+        <p>&copy; 2026 Centro médico Vida Plena - Portal del paciente</p>
+    </footer>
+
+</body>
+</html>

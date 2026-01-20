@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel administrativo - Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'panel-global.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body class="cuerpo-panel">
+
+    <header class="nav-contenedor">
+
+        <div class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
+        </div>
+
+        <div class="usuario-contenedor">
+            <div class="info-usuario">
+                <span class="nombre-usuario">{{ request.session.usuario_completo }}</span>
+                <p>Administrativo</p> 
+            </div>
+
+            <div class="avatar-usuario">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+
+            <a href="{% url 'logout' %}" class="btn-salir" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+
+        </div>
+
+    </header>
+
+    <main class="contenedor-panel">
+        <section class="bienvenida">
+            <h1>Gestión Administrativa</h1>
+            <p>Control de agendas, inventario y reportes operativos.</p>
+        </section>
+
+        <div class="cuadricula-acciones">
+            
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+                <h3>Control de agendas</h3>
+                <p>Gestión de horarios y salas.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <h3>Facturación y boletas</h3>
+                <p>Emisión de pagos y facturas.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <h3>Inventario de insumos</h3>
+                <p>Control de stock e insumos.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <h3>Reportes e ingresos</h3>
+                <p>Informes de atención e ingresos.</p>
+            </button>
+
+        </div>
+    </main>
+
+    <footer class="footer-simple">
+        <p>&copy; 2026 Centro médico Vida Plena - Portal administrativos</p>
+    </footer>
+
+</body>
+</html>

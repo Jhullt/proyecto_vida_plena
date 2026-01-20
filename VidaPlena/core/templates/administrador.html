@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel administrador - Vida Plena</title>
+    <link rel="stylesheet" href="{% static 'panel-global.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/icono.ico' %}">
+</head>
+<body class="cuerpo-panel">
+
+    <header class="nav-contenedor">
+
+        <div class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
+        </div>
+
+        <div class="usuario-contenedor">
+            <div class="info-usuario">
+                <span class="nombre-usuario">{{ request.session.usuario_completo }}</span>
+                <p>Administrador</p> 
+            </div>
+
+            <div class="avatar-usuario">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <a href="{% url 'logout' %}" class="btn-salir" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+
+        </div>
+
+    </header>
+
+    <main class="contenedor-panel">
+        <section class="bienvenida">
+            <h1>Panel de control gerencial</h1>
+            <p>Análisis de rendimiento, estadísticas de atención y flujo de ingresos.</p>
+        </section>
+
+        <div class="cuadricula-acciones">
+            
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <h3>Productividad</h3>
+                <p>Reportes de desempeño médico.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
+                <h3>Estadísticas</h3>
+                <p>Pacientes por especialidad.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-cash-register"></i>
+                </div>
+                <h3>Caja e ingresos</h3>
+                <p>Control de pagos y recaudación.</p>
+            </button>
+
+            <button class="tarjeta-accion">
+                <div class="icono-contenedor">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                </div>
+                <h3>Análisis de demanda</h3>
+                <p>Horas y días de mayor flujo.</p>
+            </button>
+
+        </div>
+    </main>
+
+    <footer class="footer-simple">
+        <p>&copy; 2026 Centro médico Vida Plena - Portal administrador</p>
+    </footer>
+
+</body>
+</html>
